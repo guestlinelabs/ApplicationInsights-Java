@@ -42,7 +42,8 @@ public class StatementClassDataDataProvider {
             "com/microsoft/sqlserver/jdbc/SQLServerStatement",
             "org/apache/derby/client/am/Statement",
             "org/apache/derby/client/am/ClientStatement",
-            "org/sqlite/jdbc3/JDBC3Statement"
+            "org/sqlite/jdbc3/JDBC3Statement",
+            "net/sourceforge/jtds/jdbc/JtdsStatement"
     };
 
     private final Map<String, ClassInstrumentationData> classesToInstrument;

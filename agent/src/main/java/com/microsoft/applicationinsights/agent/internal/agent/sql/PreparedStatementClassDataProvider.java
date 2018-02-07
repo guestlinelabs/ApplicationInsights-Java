@@ -69,6 +69,9 @@ public final class PreparedStatementClassDataProvider {
             factory = classFactoryForSqlServer();
             doAdd(factory, "com/microsoft/sqlserver/jdbc/SQLServerPreparedStatement");
 
+            factory = classFactoryForJtdsSqlServer();
+            doAdd(factory, "net/sourceforge/jtds/jdbc/JtdsPreparedStatement");
+
             addSqlite();
         } catch (Throwable t) {
             InternalAgentLogger.INSTANCE.error("Exception while loading HTTP classes: '%s'", t.getMessage());
@@ -253,6 +256,22 @@ public final class PreparedStatementClassDataProvider {
                 HashSet<String> ctorSignatures = new HashSet<String>();
                 ctorSignatures.add("(Lcom/microsoft/sqlserver/jdbc/SQLServerConnection;Ljava/lang/String;" +
                         "IILcom/microsoft/sqlserver/jdbc/SQLServerStatementColumnEncryptionSetting;)V");
+                final PreparedStatementMetaData metaData1 = new PreparedStatementMetaData(ctorSignatures);
+                metaData1.sqlStringInCtor = 2;
+                return new PreparedStatementClassVisitor(classInstrumentationData, classWriter, metaData1);
+            }
+        };
+
+        return classVisitorFactory;
+    }
+
+    private ClassVisitorFactory classFactoryForJtdsSqlServer() {
+
+        ClassVisitorFactory classVisitorFactory = new ClassVisitorFactory() {
+            @Override
+            public ClassVisitor create(ClassInstrumentationData classInstrumentationData, ClassWriter classWriter) {
+                HashSet<String> ctorSignatures = new HashSet<String>();
+                ctorSignatures.add("(Lnet/sourceforge/jtds/jdbc/ConnectionJDBC2;Ljava/lang/String;IIZ)V");
                 final PreparedStatementMetaData metaData1 = new PreparedStatementMetaData(ctorSignatures);
                 metaData1.sqlStringInCtor = 2;
                 return new PreparedStatementClassVisitor(classInstrumentationData, classWriter, metaData1);
